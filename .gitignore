@@ -1,0 +1,17 @@
+# Standard python ignores
+*.py[cod]
+__pycache__
+*.log
+*~
+*.swp
+.python-version
+.DS_Store
+
+# Asset sources
+dodge_assets.zip
+.import/
+*.import
+
+# Python script addon
+addons/pythonscript/
+pythonscript.gdnlib
