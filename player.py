@@ -15,6 +15,7 @@ class Player(Area2D):
 
     def _ready(self):
         self.screen_size = self.get_viewport_rect().size
+        self.hide()
 
     def _process(self, delta):
         velocity = Vector2()
@@ -42,3 +43,11 @@ class Player(Area2D):
             clamp(self.position.x, 0, self.screen_size.x),
             clamp(self.position.y, 0, self.screen_size.y),
         )
+
+        if velocity.x != 0:
+            self.get_node("AnimatedSprite").animation = "walk"
+            self.get_node("AnimatedSprite").flip_v = False
+            self.get_node("AnimatedSprite").flip_h = velocity.x < 0
+        elif velocity.y != 0:
+            self.get_node("AnimatedSprite").animation = "up"
+            self.get_node("AnimatedSprite").flip_v = velocity.y > 0
