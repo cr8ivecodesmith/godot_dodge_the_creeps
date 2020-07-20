@@ -59,8 +59,7 @@ class Player(Area2D):
     def _on_Player_body_entered(self, body):
         self.hide()  # Player disappears after being hit.
 
-        # NOTE: I'm not sure if this is the right method.
-        self.emit_signal("hit")
+        body.emit_signal("hit")
 
         # Ensures that the collission shape is not disabled while
         # the Godot is still in the middle of collision processing.
