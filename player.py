@@ -12,7 +12,7 @@ from utils import clamp
 
 @exposed
 class Player(Area2D):
-    speed = export(int, defaut=420)
+    speed = export(int, default=420)
     screen_size = None
     hit = signal()
 
