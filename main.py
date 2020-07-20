@@ -26,6 +26,10 @@ class Main(Node):
 
         self.get_node("HUD").show_game_over()
 
+        # Call the queue_free function in every node belonging to the
+        # mobs group.
+        self.get_tree().call_group("mobs", "queue_free")
+
     def new_game(self):
         self.score = 0
         self.get_node("Player").start(
