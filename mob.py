@@ -1,4 +1,4 @@
-from random import randint
+from random import randrange
 
 from godot import (
     exposed,
@@ -17,8 +17,8 @@ class Mob(RigidBody2D):
         animated_sprite = self.get_node("AnimatedSprite")
 
         mob_types = animated_sprite.frames.get_animation_names()
-        animated_sprite.animation = mob_types[randint(0, len(mob_types)-1)]
+
+        animated_sprite.animation = mob_types[randrange(len(mob_types))]
 
     def _on_VisibilityNotifier2D_screen_exited(self):
-        # NOTE: I'm not sure what the method name for this yet.
         self.queue_free()
