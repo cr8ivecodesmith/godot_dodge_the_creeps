@@ -1,5 +1,6 @@
 from godot import (
     exposed,
+    export,
     Area2D,
     Vector2,
     Input,
@@ -11,7 +12,7 @@ from utils import clamp
 
 @exposed
 class Player(Area2D):
-    speed = 420
+    speed = export(int, defaut=420)
     screen_size = None
     hit = signal()
 
