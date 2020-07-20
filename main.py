@@ -18,11 +18,13 @@ class Main(Node):
     score = 0
 
     def _ready(self):
-        self.new_game()
+        return
 
     def game_over(self):
         self.get_node("ScoreTimer").stop()
         self.get_node("MobTimer").stop()
+
+        self.get_node("HUD").show_game_over()
 
     def new_game(self):
         self.score = 0
@@ -31,12 +33,17 @@ class Main(Node):
         )
         self.get_node("StartTimer").start()
 
+        hud = self.get_node("HUD")
+        hud.update_score(self.score)
+        hud.show_message("Get Ready")
+
     def _on_StartTimer_timeout(self):
         self.get_node("MobTimer").start()
         self.get_node("ScoreTimer").start()
 
     def _on_ScoreTimer_timeout(self):
         self.score += 1
+        self.get_node("HUD").update_score(self.score)
 
     def _on_MobTimer_timeout(self):
         mob_spawn_location = self.get_node("MobPath/MobSpawnLocation")
