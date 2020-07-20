@@ -4,6 +4,8 @@ from godot import (
     signal,
 )
 
+from utils import debug
+
 
 @exposed
 class Hud(CanvasLayer):
@@ -35,11 +37,11 @@ class Hud(CanvasLayer):
         self.get_node("StartButton").show()
 
     def update_score(self, score):
-        self.get_node("ScoreLabel").text = score
+        self.get_node("ScoreLabel").text = str(score)
 
     def _on_StartButton_pressed(self):
         self.get_node("StartButton").hide()
-        self.emit_signal("start_game")
+        self.call('emit_signal', 'start_game')
 
     def _on_MessageTimer_timeout(self):
         self.get_node("Message").hide()
