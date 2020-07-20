@@ -4,12 +4,11 @@ from godot import (
     signal,
 )
 
-from utils import debug
-
 
 @exposed
 class Hud(CanvasLayer):
     start_game = signal()
+    is_game_over = False
 
     def show_message(self, text):
         message = self.get_node("Message")
@@ -19,22 +18,7 @@ class Hud(CanvasLayer):
 
     def show_game_over(self):
         self.show_message("Game Over")
-
-        # TODO:
-        # signal(self.get_node("MessageTimer"), "timeout")
-        # wait for message timer to signal timeout
-
-        message = self.get_node("Message")
-        message.text = "Dodge the\nCreeps!"
-        message.show()
-
-        # TODO:
-        # Make a one-shot timer and wait for it to finish.
-        timer = self.get_tree().create_timer(1)
-        # yield timer, "timeout"
-        # wait for timer to signal timeout
-
-        self.get_node("StartButton").show()
+        self.is_game_over = True
 
     def update_score(self, score):
         self.get_node("ScoreLabel").text = str(score)
@@ -45,3 +29,14 @@ class Hud(CanvasLayer):
 
     def _on_MessageTimer_timeout(self):
         self.get_node("Message").hide()
+
+        # This is call callback hack since I can't figure out
+        # how to use the yield function in GDScript to wait and listen
+        # to a signal
+        if self.is_game_over:
+            self.is_game_over = False
+
+            message = self.get_node("Message")
+            message.text = "Dodge the\nCreeps!"
+            message.show()
+            self.get_node("StartButton").show()
