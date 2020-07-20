@@ -29,6 +29,8 @@ class Main(Node):
         # Call the queue_free function in every node belonging to the
         # mobs group.
         self.get_tree().call_group("mobs", "queue_free")
+        self.get_node("Music").stop()
+        self.get_node("DeathSound").play()
 
     def new_game(self):
         self.score = 0
@@ -40,6 +42,8 @@ class Main(Node):
         hud = self.get_node("HUD")
         hud.update_score(self.score)
         hud.show_message("Get Ready")
+
+        self.get_node("Music").play()
 
     def _on_StartTimer_timeout(self):
         self.get_node("MobTimer").start()
