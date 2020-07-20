@@ -3,6 +3,7 @@ from godot import (
     Area2D,
     Vector2,
     Input,
+    signal,
 )
 
 from utils import clamp
@@ -12,6 +13,7 @@ from utils import clamp
 class Player(Area2D):
     speed = 420
     screen_size = None
+    hit = signal()
 
     def _ready(self):
         self.screen_size = self.get_viewport_rect().size
@@ -29,11 +31,12 @@ class Player(Area2D):
         if Input.is_action_pressed("ui_up"):
             velocity.y -= 1
 
+        animated_sprite = self.get_node("AnimatedSprite")
         if velocity.length() > 0:
             velocity = velocity.normalized() * self.speed
-            self.get_node("AnimatedSprite").play()
+            animated_sprite.play()
         else:
-            self.get_node("AnimatedSprite").stop()
+            animated_sprite.stop()
 
         self.position += velocity * delta
 
@@ -45,9 +48,24 @@ class Player(Area2D):
         )
 
         if velocity.x != 0:
-            self.get_node("AnimatedSprite").animation = "walk"
-            self.get_node("AnimatedSprite").flip_v = False
-            self.get_node("AnimatedSprite").flip_h = velocity.x < 0
+            animated_sprite.animation = "walk"
+            animated_sprite.flip_v = False
+            animated_sprite.flip_h = velocity.x < 0
         elif velocity.y != 0:
-            self.get_node("AnimatedSprite").animation = "up"
-            self.get_node("AnimatedSprite").flip_v = velocity.y > 0
+            animated_sprite.animation = "up"
+            animated_sprite.flip_v = velocity.y > 0
+
+    def _on_Player_body_entered(self, body):
+        self.hide()  # Player disappears after being hit.
+
+        # NOTE: I'm not sure if this is the right method.
+        self.emit_signal("hit")
+
+        # Ensures that the collission shape is not disabled while
+        # the Godot is still in the middle of collision processing.
+        self.get_node("CollisionShape2D").set_deferred("disabled", True)
+
+    def start(self, pos):
+        self.position = pos
+        self.show()
+        self.get_node("CollisionShape2D").disabled = False
