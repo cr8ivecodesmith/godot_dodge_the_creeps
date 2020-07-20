@@ -9,6 +9,7 @@ from godot import (
 class Hud(CanvasLayer):
     start_game = signal()
     is_game_over = False
+    show_start_button = False
 
     def show_message(self, text):
         message = self.get_node("Message")
@@ -20,6 +21,13 @@ class Hud(CanvasLayer):
         self.show_message("Game Over")
         self.is_game_over = True
 
+    def show_title_message(self):
+        message = self.get_node("Message")
+        message.text = "Dodge the\nCreeps!"
+        message.show()
+        self.get_node("DelayTimer").start()
+        self.show_start_button = True
+
     def update_score(self, score):
         self.get_node("ScoreLabel").text = str(score)
 
@@ -30,13 +38,11 @@ class Hud(CanvasLayer):
     def _on_MessageTimer_timeout(self):
         self.get_node("Message").hide()
 
-        # This is call callback hack since I can't figure out
-        # how to use the yield function in GDScript to wait and listen
-        # to a signal
         if self.is_game_over:
             self.is_game_over = False
+            self.show_title_message()
 
-            message = self.get_node("Message")
-            message.text = "Dodge the\nCreeps!"
-            message.show()
+    def _on_DelayTimer_timeout(self):
+        if self.show_start_button:
+            self.show_start_button = False
             self.get_node("StartButton").show()
